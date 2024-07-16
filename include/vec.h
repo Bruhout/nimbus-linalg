@@ -30,7 +30,8 @@ public:
 
     float operator[](int index); // index
 
-    vec3 operator*(mat4 mat); // matrix multiplication
+    vec3 operator*(mat4 mat); // vector matrix multiplication
+    void operator*=(mat4 mat); // vector matrix multiplication in place
     vec3 operator*(vec3 vec); // cross product
 
     // linear algebra functions------------------------
@@ -41,6 +42,7 @@ public:
     float DotProduct(vec3 vec);
     vec3 Normalize();
     vec3 ProjectVec(vec3 ontoVec);
+    vec3 MultiplyVecMat(mat4 mat);
 
     // utility functions------------------------
     void PrintVec();
@@ -53,6 +55,7 @@ public:
     vec3 UintToFloat();
 
     // implemention pending------------------------
+    vec3 ViewportTransform();
 };
 
 class vec4 
@@ -79,7 +82,8 @@ public:
     
     float operator[](int index); // index
 
-    vec4 operator*(mat4 mat); // matrix multiplication
+    vec4 operator*(mat4 mat); // vector matrix multiplication
+    void operator*=(mat4 mat); // vector matrix multiplication in place
     vec4 operator*(vec4 vec); // cross product
 
     // linear algebra functions------------------------
@@ -90,6 +94,7 @@ public:
     float DotProduct(vec4 vec);
     vec4 Normalize();
     vec4 ProjectVec(vec4 ontoVec);
+    vec4 MultiplyVecMat(mat4 mat);
 
     // utility functions------------------------
     void PrintVec();
@@ -102,6 +107,7 @@ public:
     vec4 UintToFloat();
 
     // implemention pending------------------------
+    vec4 ViewportTransform();
 };
 
 }

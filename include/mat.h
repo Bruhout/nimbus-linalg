@@ -24,6 +24,7 @@ public:
     void operator*=(mat4 mat); // matrix matrix multiplication in place
 
     // linear algebra functions------------------------
+    mat4 MultiplyMatrices(mat4 mat);
     mat4 TranslateMat(vec3 vec);
     mat4 LookAt(vec3 camera_pos , vec3 camera_aim , vec3 world_up);
     mat4 ProjectionMat(float fov_rad , float z_near , float z_far);
@@ -32,8 +33,8 @@ public:
     void PrintMat();
 
     // implementation pending------------------------
-    mat4 RotateMat(float theta , vec3 axix_vec);
-    float* GetArray();
+    mat4 RotateMat(float theta , vec3 axix_vec); // uses quaternions to create a rotation around any vector as an axis
+    float* GetArray(); // heap allocated array of the matrix data (row major ordering)
 };
 
 }

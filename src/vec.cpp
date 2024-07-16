@@ -99,11 +99,23 @@ vec3 vec3::operator*(mat4 mat)
 {
     vec3 new_vec = vec3();
 
-    new_vec.x = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8]);
-    new_vec.y = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9]);
-    new_vec.z = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]);
+    new_vec.x = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8 ]) + (mat.array[12]);
+    new_vec.y = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9 ]) + (mat.array[13]);
+    new_vec.z = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]) + (mat.array[14]);
 
     return new_vec;
+}
+void vec3::operator*=(mat4 mat)
+{
+    float array[3];
+
+    array[0] = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8 ]) + (mat.array[12]);
+    array[1] = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9 ]) + (mat.array[13]);
+    array[2] = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]) + (mat.array[14]);
+
+    x = array[0];
+    y = array[1];
+    z = array[2];
 }
 vec3 vec3::operator*(vec3 vec)
 {
@@ -144,7 +156,16 @@ vec3 vec3::ProjectVec(vec3 ontoVec)
     float mag = ontoVec.DotProduct(*this) / ontoVec.Magnitude();
     return ontoUnitVec * mag;
 }
+vec3 vec3::MultiplyVecMat(mat4 mat)
+{
+    vec3 new_vec = vec3();
 
+    new_vec.x = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8 ]);
+    new_vec.y = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9 ]);
+    new_vec.z = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]);
+
+    return new_vec;
+}
 
 
 // utility functions------------------------
@@ -293,12 +314,26 @@ vec4 vec4::operator*(mat4 mat)
 {
     vec4 new_vec = vec3();
 
-    new_vec.x = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8]) + (w * mat.array[12]);
-    new_vec.y = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9]) + (w * mat.array[13]);
+    new_vec.x = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8 ]) + (w * mat.array[12]);
+    new_vec.y = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9 ]) + (w * mat.array[13]);
     new_vec.z = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]) + (w * mat.array[14]);
     new_vec.w = (x * mat.array[3]) + (y * mat.array[7]) + (z * mat.array[11]) + (w * mat.array[15]);
 
     return new_vec;
+}
+void vec4::operator*=(mat4 mat)
+{
+    float array[4];
+
+    array[0] = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8 ]) + (w * mat.array[12]);
+    array[1] = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9 ]) + (w * mat.array[13]);
+    array[2] = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]) + (w * mat.array[14]);
+    array[3] = (x * mat.array[3]) + (y * mat.array[7]) + (z * mat.array[11]) + (w * mat.array[15]);
+
+    x = array[0];
+    y = array[1];
+    z = array[2];
+    w = array[3];
 }
 vec4 vec4::operator*(vec4 vec)
 {
@@ -339,6 +374,17 @@ vec4 vec4::ProjectVec(vec4 ontoVec)
     vec4 ontoUnitVec = ontoVec / ontoVec.Magnitude();
     float mag = ontoVec.DotProduct(*this) / ontoVec.Magnitude();
     return ontoUnitVec * mag;
+}
+vec4 vec4::MultiplyVecMat(mat4 mat)
+{
+    vec4 new_vec = vec4();
+
+    new_vec.x = (x * mat.array[0]) + (y * mat.array[4]) + (z * mat.array[8 ]) + (w * mat.array[12]);
+    new_vec.y = (x * mat.array[1]) + (y * mat.array[5]) + (z * mat.array[9 ]) + (w * mat.array[13]);
+    new_vec.z = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]) + (w * mat.array[14]);
+    new_vec.w = (x * mat.array[3]) + (y * mat.array[7]) + (z * mat.array[11]) + (w * mat.array[15]);
+
+    return new_vec;
 }
 
 // utility functions------------------------
