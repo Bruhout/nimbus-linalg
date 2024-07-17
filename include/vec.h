@@ -5,6 +5,10 @@
 
 namespace la {
 
+// angle conversion functions
+static inline float radians(float angle) { return angle * 3.141592 / 180.0f; }
+static inline float degrees(float angle) { return angle * 180.0f / 3.141592; }
+
 class vec4;
 
 class vec3 
