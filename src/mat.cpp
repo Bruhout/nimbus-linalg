@@ -167,11 +167,22 @@ mat4 mat4::ProjectionMat(float fov_rad , float z_near , float z_far)
     float p_mat[] = {
         1.0f/tan(fov_rad/2.0f)  ,       0.0f ,                     0.0f ,                0.0f ,
         0.0f ,                   1.0f/tan(fov_rad/2.0f) ,          0.0f ,                0.0f ,
-        0.0f ,                          0.0f ,               1.0f/(z_far - z_near) ,     1.0f ,
+        0.0f ,                          0.0f ,              -1.0f/(z_far - z_near) ,    -1.0f ,
         0.0f ,                          0.0f ,             -z_near/(z_far - z_near) ,    0.0f
     };
 
     return mat4(p_mat);
+}
+mat4 mat4::Transpose()
+{
+    mat4 new_mat = mat4();
+    for (int i=0 ; i<4 ; i++) {
+        for (int j=0 ; j<4 ; j++) {
+            new_mat.array[i*4 + j] = array[j*4 + i];
+        }
+    }
+
+    return new_mat;
 }
 
 
