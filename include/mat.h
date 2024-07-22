@@ -27,7 +27,7 @@ public:
     mat4 MultiplyMatrices(mat4 mat);
     mat4 TranslateMat(vec3 vec);
     mat4 LookAt(vec3 camera_pos , vec3 camera_aim , vec3 world_up);
-    mat4 ProjectionMat(float fov_rad , float z_near , float z_far);
+    mat4 PerspectiveMat(float fov_rad , float z_near , float z_far);
     mat4 Transpose(); // use this to convert between row and column major ordering
 
     // utility functions------------------------

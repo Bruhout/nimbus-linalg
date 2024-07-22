@@ -162,7 +162,7 @@ mat4 mat4::LookAt(vec3 camera_pos,  vec3 camera_aim , vec3 world_up)
     // new system where basis vectors are according to the camera
     return mat4(right , up , forward).TranslateMat(camera_pos * -1);
 }
-mat4 mat4::ProjectionMat(float fov_rad , float z_near , float z_far)
+mat4 mat4::PerspectiveMat(float fov_rad , float z_near , float z_far)
 {
     float p_mat[] = {
         1.0f/tan(fov_rad/2.0f)  ,       0.0f ,                     0.0f ,                0.0f ,
@@ -190,10 +190,15 @@ mat4 mat4::Transpose()
 // utility functions------------------------
 void mat4::PrintMat()
 {
-    std::cout << "____" << "             " << "____\n";
-    std::cout << "|" << std::fixed << std::setprecision(2) << array[0]  << ' ' << array[1] << ' ' << array[2] << ' ' << array[3] << "|\n";
-    std::cout << "|" << std::fixed << std::setprecision(2) << array[4]  << ' ' << array[5] << ' ' << array[6] << ' ' << array[7] << "|\n";
-    std::cout << "|" << std::fixed << std::setprecision(2) << array[8]  << ' ' << array[9] << ' ' << array[10] << ' ' << array[11] << "|\n";
-    std::cout << "|" << std::fixed << std::setprecision(2) << array[12] << ' ' << array[13] << ' ' << array[14] << ' ' << array[15] << "|\n";
-    std::cout << "¯¯¯¯" << "             " << "¯¯¯¯\n";
+    for (int i=0 ; i<4 ; i++)
+    {
+        std::cout << "| ";
+        for (int j=0 ; j<4 ; j++)
+        {
+            if (array[i*4 + j] > 0.0f && array[i*4 + j] != 0.0f) { std::cout << " "; }
+            std::cout << std::fixed << std::setprecision(2) << array[i*4 + j];
+            std::cout << " ";
+        }
+        std::cout << "|\n";
+    }
 }

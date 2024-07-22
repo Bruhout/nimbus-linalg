@@ -41,11 +41,11 @@ public:
     // linear algebra functions------------------------
     float MagnitudeSq();
     float Magnitude();
-    float DistanceFrom(vec3 refPoint);
+    float DistanceFrom(vec3 ref_point);
     vec3 CrossProduct(vec3 vec);
     float DotProduct(vec3 vec);
     vec3 Normalize();
-    vec3 ProjectVec(vec3 ontoVec);
+    vec3 ProjectVec(vec3 onto_vec);
     vec3 MultiplyVecMat(mat4 mat);
 
     // utility functions------------------------
@@ -93,12 +93,13 @@ public:
     // linear algebra functions------------------------
     float MagnitudeSq();
     float Magnitude();
-    float DistanceFrom(vec4 refPoint);
+    float DistanceFrom(vec4 ref_point);
     vec4 CrossProduct(vec4 vec);
     float DotProduct(vec4 vec);
     vec4 Normalize();
-    vec4 ProjectVec(vec4 ontoVec);
+    vec4 ProjectVec(vec4 onto_vec);
     vec4 MultiplyVecMat(mat4 mat);
+    vec4 PersProjectVec(mat4 proj_mat); // multiplies a vec3 by a given projection matrix and does the perspective divide on it
 
     // utility functions------------------------
     void PrintVec();
