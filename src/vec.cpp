@@ -167,6 +167,17 @@ vec3 vec3::MultiplyVecMat(mat4 mat)
 
     return new_vec;
 }
+vec4 vec4::PersProjectVec(mat4 proj_mat)
+{
+    vec4 out_vec = vec4();
+
+    out_vec = *this * proj_mat;
+
+    out_vec.x /= out_vec.z;
+    out_vec.y /= out_vec.z;
+    return out_vec;
+}
+
 
 
 // utility functions------------------------

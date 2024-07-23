@@ -196,16 +196,7 @@ mat4 mat4::Transpose()
 
     return new_mat;
 }
-vec4 mat4::PersProjectVec(vec3 vec , mat4 proj_mat)
-{
-    vec4 out_vec = vec4();
 
-    out_vec = vec * proj_mat;
-
-    out_vec.x /= out_vec.z;
-    out_vec.y /= out_vec.z;
-    return out_vec;
-}
 
 
 
