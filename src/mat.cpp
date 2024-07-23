@@ -11,13 +11,25 @@ using namespace la;
 // constructor functions------------------------
 mat4::mat4()
 {
-    for (int i=0 ; i<4 ; i++) {
-        for (int j=0 ; j<4 ; j++) {
-            if (i==j) {
-                array[i*4 + j] = 1.0f;
-            } else {
-                array[i*4 + j] = 0.0f;
-            }
+    for (int i=0 ; i<16 ; i++)
+    {
+        switch (i)
+        {
+            case 0:
+                array[i] = 1.0f;
+                continue;
+            case 5:
+                array[i] = 1.0f;
+                continue;
+            case 10:
+                array[i] = 1.0f;
+                continue;
+            case 15:
+                array[i] = 1.0f;
+                continue;
+            default:
+                array[i] = 0.0f;
+                continue;
         }
     }
 }
@@ -183,6 +195,16 @@ mat4 mat4::Transpose()
     }
 
     return new_mat;
+}
+vec4 mat4::PersProjectVec(vec3 vec , mat4 proj_mat)
+{
+    vec4 out_vec = vec4();
+
+    out_vec = vec * proj_mat;
+
+    out_vec.x /= out_vec.z;
+    out_vec.y /= out_vec.z;
+    return out_vec;
 }
 
 

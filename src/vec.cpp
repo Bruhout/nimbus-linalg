@@ -169,7 +169,6 @@ vec3 vec3::MultiplyVecMat(mat4 mat)
 }
 
 
-
 // utility functions------------------------
 void vec3::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << '}' << '\n'; }
 
@@ -270,13 +269,13 @@ vec4 vec4::operator/(float factor)
 }
 
 
-void vec4::operator-=(vec4 vec)
+void vec4::operator+=(vec4 vec)
 {
     x += vec.x;
     y += vec.y;
     z += vec.z;
 }
-void vec4::operator+=(vec4 vec)
+void vec4::operator-=(vec4 vec)
 {
     x -= vec.x;
     y -= vec.y;
@@ -388,17 +387,6 @@ vec4 vec4::MultiplyVecMat(mat4 mat)
 
     return new_vec;
 }
-vec4 vec4::PersProjectVec(mat4 proj_mat)
-{
-    vec4 out_vec = vec4();
-
-    out_vec = *this * proj_mat;
-
-    out_vec.x /= out_vec.z;
-    out_vec.y /= out_vec.z;
-    return out_vec;
-}
-
 
 // utility functions------------------------
 void vec4::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << '}' << '\n'; } 
