@@ -182,8 +182,23 @@ vec4 vec4::PersProjectVec(mat4 proj_mat)
 
 // utility functions------------------------
 void vec3::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << '}' << '\n'; }
+vec3 vec3::ViewportTransform(int frame_width , int frame_height)
+{
+    int frame_height_half = round(frame_height/2.0f);
+    int frame_width_half = round(frame_width/2.0f);
 
-// color functions
+    int x_coord = x * frame_width_half;
+    int y_coord = y * frame_height_half;
+
+    x_coord += frame_width_half; 
+    y_coord += frame_height_half;
+
+    return vec3(x_coord , y_coord , z);
+}
+
+
+
+// color functions------------------------
 vec3 vec3::ReflectColor(vec3 mat_color)
 {
     return vec3(
@@ -400,7 +415,21 @@ vec4 vec4::MultiplyVecMat(mat4 mat)
 }
 
 // utility functions------------------------
-void vec4::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << '}' << '\n'; } 
+void vec4::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << ',' << w << '}' << '\n'; } 
+vec4 vec4::ViewportTransform(int frame_width , int frame_height)
+{
+    int frame_height_half = round(frame_height/2.0f);
+    int frame_width_half = round(frame_width/2.0f);
+
+    int x_coord = x * frame_width_half;
+    int y_coord = y * frame_height_half;
+
+    x_coord += frame_width_half; 
+    y_coord += frame_height_half;
+
+    return vec4(x_coord , y_coord , z , w);
+}
+
 
 // color functions------------------------
 vec4 vec4::ReflectColor(vec4 mat_color)

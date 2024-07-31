@@ -13,6 +13,7 @@ void mat_from_vec_test();
 void three_four_convert_test();
 void lookat_test();
 void perspective_projection_test();
+void rotate_mat_test();
 
 int main(void)
 {
@@ -26,6 +27,7 @@ int main(void)
     three_four_convert_test();
     lookat_test();
     perspective_projection_test();
+    rotate_mat_test();
 }
 
 void print_test()
@@ -129,4 +131,22 @@ void perspective_projection_test()
     la::mat4 proj_mat = la::mat4().PerspectiveMat(la::radians(60.0f) , 0.1f , 100.0f);
 
     proj_mat.PrintMat();
+}
+
+void rotate_mat_test()
+{
+    std::cout << "rotate_mat_test()\n";
+    la::vec4 new_vec = la::vec4(1.0f , 0.0f , 0.0f , 1.0f);
+
+    // rotate about x
+    la::mat4 new_mat = la::mat4().RotateMat(la::PIBY2 , 0.0f , 0.0f);
+    (new_vec * new_mat).PrintVec();
+
+    // rotate about y
+    new_mat = la::mat4().RotateMat(0.0f , la::PIBY2 , 0.0f);
+    (new_vec * new_mat).PrintVec();
+
+    // rotate about z
+    new_mat = la::mat4().RotateMat(0.0f , 0.0f , la::PIBY2);
+    (new_vec * new_mat).PrintVec();
 }

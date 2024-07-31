@@ -5,9 +5,12 @@
 
 namespace la {
 
+constexpr float PI = 3.141592f;
+constexpr float PIBY2 = 1.570796f;
+
 // angle conversion functions
-static inline float radians(float angle) { return angle * 3.141592 / 180.0f; }
-static inline float degrees(float angle) { return angle * 180.0f / 3.141592; }
+static inline float radians(float angle) { return angle * PI / 180.0f; }
+static inline float degrees(float angle) { return angle * 180.0f / PI; }
 
 class vec4;
 
@@ -50,6 +53,7 @@ public:
 
     // utility functions------------------------
     void PrintVec();
+    vec3 ViewportTransform(int frame_width , int frame_height);
 
     // color vector functions------------------------
     // this library allows you to use the vector objects to store RBG / RGBA color values with the supporting functions
@@ -59,7 +63,6 @@ public:
     vec3 UintToFloat();
 
     // implemention pending------------------------
-    vec3 ViewportTransform();
 };
 
 class vec4 
@@ -103,6 +106,7 @@ public:
 
     // utility functions------------------------
     void PrintVec();
+    vec4 ViewportTransform(int frame_width , int frame_height);
 
     // color vector functions
     // this library allows you to use the vector objects to store RBG / RGBA color values with the supporting functions
@@ -112,7 +116,6 @@ public:
     vec4 UintToFloat();
 
     // implemention pending------------------------
-    vec4 ViewportTransform();
 };
 
 }

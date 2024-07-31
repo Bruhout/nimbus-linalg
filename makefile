@@ -5,7 +5,6 @@ SRC_DIR = src
 INCLUDE_DIR = include
 DOCS_DIR = docs
 
-
 linalg.a: ${BUILD_DIR}/vec.o ${BUILD_DIR}/mat.o
 	ar rcs linalg.a ${BUILD_DIR}/vec.o ${BUILD_DIR}/mat.o
 

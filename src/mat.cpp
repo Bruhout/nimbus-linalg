@@ -165,6 +165,58 @@ mat4 mat4::TranslateMat(vec3 vec)
 
     return new_mat;
 }
+mat4 mat4::RotateMat(float pitch , float yaw , float roll)
+{
+    mat4 new_mat = *this;
+    
+    new_mat = new_mat.RotateMatX(pitch);
+    new_mat = new_mat.RotateMatY(yaw);
+    new_mat = new_mat.RotateMatZ(roll);
+
+    return new_mat;
+}
+mat4 mat4::RotateMatX(float pitch)
+{
+    mat4 new_mat = *this;
+    
+    float array_[] = {
+        1.0f ,    0.0f     ,     0.0f   , 0.0f ,
+        0.0f ,  cos(pitch) , sin(pitch) , 0.0f ,
+        0.0f , -sin(pitch) , cos(pitch) , 0.0f ,
+        0.0f ,    0.0f     ,     0.0f   , 1.0f
+    };
+    mat4 rot_mat = mat4(array_);
+
+    return rot_mat * new_mat;
+}
+mat4 mat4::RotateMatY(float yaw)
+{
+    mat4 new_mat = *this;
+
+    float array_[] = {
+         cos(yaw) , 0.0f , sin(yaw)  , 0.0f ,
+        0.0f     , 1.0f ,   0.0f    , 0.0f ,
+        -sin(yaw) , 0.0f , cos(yaw)  , 0.0f ,
+        0.0f     , 0.0f ,   0.0f    , 1.0f
+    };
+    mat4 rot_mat = mat4(array_);
+
+    return rot_mat * new_mat;
+}
+mat4 mat4::RotateMatZ(float roll)
+{
+    mat4 new_mat = *this;
+
+    float array_[] = {
+        cos(roll)  , sin(roll) , 0.0f , 0.0f ,
+        -sin(roll) , cos(roll) , 0.0f , 0.0f ,
+        0.0f       ,   0.0f    , 1.0f , 0.0f ,
+        0.0f       ,   0.0f    , 0.0f , 1.0f
+    };
+    mat4 rot_mat = mat4(array_);
+
+    return rot_mat * new_mat;
+}
 mat4 mat4::LookAt(vec3 camera_pos,  vec3 camera_aim , vec3 world_up)
 {
     vec3 forward = (camera_pos - camera_aim).Normalize();
@@ -214,4 +266,6 @@ void mat4::PrintMat()
         }
         std::cout << "|\n";
     }
+
+    std::cout << std::endl;
 }
