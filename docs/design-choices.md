@@ -1,5 +1,18 @@
 # This file will describe some of the design choices i made while writing this library and my reasons for doing do
 
+## VERY VERY IMPORTANT DETAIL
+The only way to edit the `w` compontent of the `vec4` class after initialization is to do so manully by accessing the attribute.
+
+Almost none of the methods in the `vec4` class affect the `w` component of the vector. The `w` component is used to store data for later use in the rendering pipeline. Altering it is not recommended.
+
+For eg. 
+    > functions like `Magnitude()` and `Normalize()` only take into consideration the x , y , z components. For a `vec4`, its magnitude will be the same as a `vec3` having the same main components, no matter what the `w` of the vec4 is.
+    > functions like `CrossProduct()` which take 2 `vec4` and return another `vec4` will simply return the `w` component of the first vector (the vector you call the function upon), as the `w` component of the output vector.
+    > vector Matrix Multiplication with a `mat4` will work just like normal, and thus will include the `w` coordinate of the vector.
+    > Color related methods like reflection will also include the `w` component in their computations.
+
+In this sense, there is almost no reason to use the `vec4` class before the perspective divide step, but the functions are still available to you if you wish to do something else.
+
 1. Object Oriented everything:
     Object oriented programming just reduces a lot of syntax and make code much more readble. Something like `glm` doesnt make much use of OOP. For example creating a new tranlation matrix in glm will have you pass a matrix to a translate functions
     

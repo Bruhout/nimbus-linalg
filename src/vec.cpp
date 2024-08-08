@@ -84,6 +84,7 @@ void vec3::operator/=(float factor)
 
 float vec3::operator[](int index)
 {
+    index = index % 3;
     switch(index){
         case 0:
             return x;
@@ -166,16 +167,6 @@ vec3 vec3::MultiplyVecMat(mat4 mat)
     new_vec.z = (x * mat.array[2]) + (y * mat.array[6]) + (z * mat.array[10]) + (mat.array[14]);
 
     return new_vec;
-}
-vec4 vec4::PersProjectVec(mat4 proj_mat)
-{
-    vec4 out_vec = vec4();
-
-    out_vec = *this * proj_mat;
-
-    out_vec.x /= out_vec.z;
-    out_vec.y /= out_vec.z;
-    return out_vec;
 }
 
 
@@ -263,34 +254,38 @@ vec4::vec4(vec3 vec , float W)
 // operator overloads------------------------
 vec4 vec4::operator-(vec4 vec)
 {
-    return vec3(
+    return vec4(
         x - vec.x,
         y - vec.y,
-        z - vec.z
+        z - vec.z,
+        w
     );
 }
 vec4 vec4::operator+(vec4 vec)
 {
-    return vec3(
+    return vec4(
         x + vec.x,
         y + vec.y,
-        z + vec.z
+        z + vec.z,
+        w
     );
 }
 vec4 vec4::operator*(float factor)
 {
-    return vec3(
+    return vec4(
         x * factor,
         y * factor,
-        z * factor
+        z * factor,
+        w
     );
 }
 vec4 vec4::operator/(float factor)
 {
-    return vec3(
+    return vec4(
         x / factor,
         y / factor,
-        z / factor
+        z / factor,
+        w
     );
 }
 
@@ -323,6 +318,7 @@ void vec4::operator/=(float factor)
 
 float vec4::operator[](int index)
 {
+    index = index % 4;
     switch(index){
         case 0:
             return x;
@@ -368,7 +364,7 @@ vec4 vec4::operator*(vec4 vec)
         y*vec.z + z*vec.y ,
         z*vec.x + x*vec.z , 
         x*vec.y + y*vec.x ,
-        1.0f
+        w
     );
 }
 
@@ -379,9 +375,9 @@ float vec4::Magnitude() { return pow(x*x + y*y + z*z , 0.5); }
 float vec4::DistanceFrom(vec4 ref_point)
 {
     return pow(
-        ref_point.x - x + 
-        ref_point.y - y + 
-        ref_point.z - z ,
+        pow(ref_point.x - x  , 2.0f) + 
+        pow(ref_point.y - y  , 2.0f) + 
+        pow(ref_point.z - z  , 2.0f) ,
         0.5
     );
 }
@@ -391,14 +387,20 @@ vec4 vec4::CrossProduct(vec4 vec)
         y*vec.z + z*vec.y ,
         z*vec.x + x*vec.z ,
         x*vec.y + y*vec.x ,
-        1.0f
+        w
     );
 }
 float vec4::DotProduct(vec4 vec) { return (x*vec.x + y*vec.y + z*vec.z); }
-vec4 vec4::Normalize() { return *this / Magnitude(); }
+vec4 vec4::Normalize()
+{
+    float mag = this->Magnitude();
+    vec4 new_vec = vec4(x/mag , y/mag , z/mag , w);
+
+    return new_vec; 
+}
 vec4 vec4::ProjectVec(vec4 onto_vec)
 {
-    vec4 onto_unit_vec = onto_vec / onto_vec.Magnitude();
+    vec4 onto_unit_vec = onto_vec.Normalize();
     float mag = onto_vec.DotProduct(*this) / onto_vec.Magnitude();
     return onto_unit_vec * mag;
 }
@@ -413,6 +415,18 @@ vec4 vec4::MultiplyVecMat(mat4 mat)
 
     return new_vec;
 }
+vec4 vec4::PersProjectVec(mat4 proj_mat)
+{
+    vec4 new_vec = *this;
+
+    new_vec = new_vec * proj_mat;
+
+    new_vec.x /= new_vec.w;
+    new_vec.y /= new_vec.w;
+    return new_vec;
+}
+
+
 
 // utility functions------------------------
 void vec4::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << ',' << w << '}' << '\n'; } 

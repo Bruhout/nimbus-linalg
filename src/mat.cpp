@@ -219,12 +219,12 @@ mat4 mat4::RotateMatZ(float roll)
 }
 mat4 mat4::LookAt(vec3 camera_pos,  vec3 camera_aim , vec3 world_up)
 {
-    vec3 forward = (camera_pos - camera_aim).Normalize();
-    vec3 right = (world_up * forward).Normalize();
-    vec3 up = (forward * right).Normalize();
+    vec3 backward = (camera_pos - camera_aim).Normalize();
+    vec3 right = (world_up * backward).Normalize();
+    vec3 up = (backward * right).Normalize();
 
     // new system where basis vectors are according to the camera
-    return mat4(right , up , forward).TranslateMat(camera_pos * -1);
+    return mat4(right , up , backward).TranslateMat(camera_pos * -1);
 }
 mat4 mat4::PerspectiveMat(float fov_rad , float z_near , float z_far)
 {
