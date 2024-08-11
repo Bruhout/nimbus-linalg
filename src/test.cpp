@@ -539,7 +539,7 @@ void test_operator_index()
     if ( vec4_equality_test(test[0] , la::vec4(1.0f , 0.0f , 0.0f , 0.0f)) ) {
         std::cout << "test_operator_index: true" << std::endl;
     } else {
-        std::cout << "test_operator_index: false ";
+        std::cout << "test_operator_index: false \n";
         test[0].PrintVec();
     }
 }
@@ -551,7 +551,7 @@ void test_operator_matmul()
     if ( mat4_equality_test(test1 * test2 , test1) ) {
         std::cout << "test_operator_matmul: true" << std::endl;
     } else {
-        std::cout << "test_operator_matmul: false ";
+        std::cout << "test_operator_matmul: false \n";
         (test1 * test2).PrintMat();
     }
 }
@@ -563,25 +563,59 @@ void test_multiply_matrices()
     if ( mat4_equality_test(test1.MultiplyMatrices(test2) , test1) ) {
         std::cout << "test_operator_matmul: true" << std::endl;
     } else {
-        std::cout << "test_operator_matmul: false ";
+        std::cout << "test_operator_matmul: false \n";
         (test1.MultiplyMatrices(test2)).PrintMat();
     }
 }
 void test_translate_mat()
 {
+    la::vec3 test_vec = la::vec3(2.0f , 2.0f , 2.0f);
+    la::mat4 test1 = la::mat4();
+    float test2_array[] = {
+        1.0f , 0.0f , 0.0f , 0.0f ,
+        0.0f , 1.0f , 0.0f , 0.0f ,
+        0.0f , 0.0f , 1.0f , 0.0f ,
+        2.0f , 2.0f , 2.0f , 1.0f
+    };
+    la::mat4 test2 = la::mat4(test2_array);
 
+    if ( mat4_equality_test(test1.TranslateMat(test_vec) , test2) ) {
+        std::cout << "test_translate_mat: true" << std::endl;
+    } else {
+        std::cout << "test_translate_mat: false \n";
+        (test1.TranslateMat(test_vec)).PrintMat();
+    }
 }
 void test_rotate_mat()
 {
-    
+    float pitch = la::radians(60.0f);
+    float yaw = la::radians(120.0f);
+    float roll = la::radians(180.0f);
+
+    la::mat4 new_mat = la::mat4();
+
+    std::cout << "test_rotate_mat:\n";
+    (new_mat.RotateMat(pitch , yaw , roll)).PrintMat();
 }
 void test_look_at()
 {
+    la::vec3 cam_pos = la::vec3(0.0f , 0.0f , -4.0f);
+    la::vec3 cam_aim = la::vec3(0.0f , 0.0f , 0.0f);
+    la::vec3 world_up = la::vec3(0.0f , 1.0f , 0.0f);
 
+    std::cout << "test_look_at:\n";
+    la::mat4 new_mat = la::mat4();
+
+    (new_mat.LookAt(cam_pos , cam_aim , world_up)).PrintMat();
 }
 void test_perspective_mat()
 {
+    float fov = la::radians(60.0f);
 
+    la::mat4 new_mat = la::mat4();
+
+    std::cout << "test_perspective_mat:\n";
+    (new_mat.PerspectiveMat(fov , 0.1f , 10.0f)).PrintMat();
 }
 void test_transpose()
 {
