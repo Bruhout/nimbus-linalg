@@ -1,7 +1,7 @@
-# This file will describe some of the design choices i made while writing this library and my reasons for doing do
+### Following is a description of a few implicit conventions applied in the development of this library that the user should be aware of.
 
-## VERY VERY IMPORTANT DETAIL
-The only way to edit the `w` compontent of the `vec4` class after initialization is to do so manully by accessing the attribute.
+## NOTE
+To edit the `float w` member of the `vec4` class after initialization, is to do so manully by accessing the attribute.
 
 Almost none of the methods in the `vec4` class affect the `w` component of the vector. The `w` component is used to store data for later use in the rendering pipeline. Altering it is not recommended.
 
