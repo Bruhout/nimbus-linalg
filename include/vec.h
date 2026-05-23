@@ -16,9 +16,13 @@ class vec4;
 
 class vec3 
 {
-public:
-    float x , y , z;
+    friend class vec4;
+    friend class mat4;
 
+    private:
+    float x , y , z;
+    
+    public:
     // constructor functions------------------------
     vec3();
     vec3(float X , float Y , float Z); 
@@ -67,9 +71,13 @@ public:
 
 class vec4 
 {
-public:
-    float x , y , z , w;
+    friend class vec3;
+    friend class mat4;
 
+    private:
+    float x , y , z , w;
+    
+    public:
     // constuctor functions------------------------
     vec4();
     vec4(float X , float Y , float Z , float W);

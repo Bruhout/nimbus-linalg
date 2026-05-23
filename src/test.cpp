@@ -53,11 +53,20 @@ void test_uint_to_float_vec4();
 
 
 // mat method unit tests
+void test_constructor_default_mat4();
+void test_constructor_scalar_mat4();
+void test_constructor_array_mat4();
+void test_constructor_vec3_mat4();
+void test_constructor_vec4_mat4();
 void test_operator_index();
 void test_operator_matmul();
+void test_operator_matmul_equal_mat4();
 void test_multiply_matrices();
 void test_translate_mat();
 void test_rotate_mat();
+void test_rotate_mat_x();
+void test_rotate_mat_y();
+void test_rotate_mat_z();
 void test_look_at();
 void test_perspective_mat();
 void test_transpose();
@@ -97,6 +106,7 @@ int main(void)
     test_operator_div_vec4();
     test_operator_index_vec4();
     test_operator_matmul_vec4();
+    test_operator_matmul_equal_vec4();
     test_operator_cross_vec4();
     test_magnitude_sq_vec4();
     test_magnitude_vec4();
@@ -112,11 +122,20 @@ int main(void)
     test_uint_to_float_vec4();
 
     // mat method unit tests
+    test_constructor_default_mat4();
+    test_constructor_scalar_mat4();
+    test_constructor_array_mat4();
+    test_constructor_vec3_mat4();
+    test_constructor_vec4_mat4();
     test_operator_index();
     test_operator_matmul();
+    test_operator_matmul_equal_mat4();
     test_multiply_matrices();
     test_translate_mat();
     test_rotate_mat();
+    test_rotate_mat_x();
+    test_rotate_mat_y();
+    test_rotate_mat_z();
     test_look_at();
     test_perspective_mat();
     test_transpose();
@@ -210,7 +229,7 @@ void test_operator_matmul_vec3()
     la::mat4 test_mat = la::mat4();
 
     if ( vec3_equality_test(test * test_mat , test) ) { std::cout << "test_operator_matmul_vec3: true" << std::endl; }
-    else { std::cout << "test_operator_matmul_vec3: true" << std::endl; }
+    else { std::cout << "test_operator_matmul_vec3: false "; (test * test_mat).PrintVec(); }
 }
 void test_operator_cross_vec3()
 {
@@ -399,7 +418,19 @@ void test_operator_matmul_vec4()
     la::mat4 test_mat = la::mat4();
 
     if ( vec4_equality_test(test * test_mat , test) ) { std::cout << "test_operator_matmul_vec4: true" << std::endl; }
-    else { std::cout << "test_operator_matmul_vec4: true" << std::endl; }
+    else { std::cout << "test_operator_matmul_vec4: false "; (test * test_mat).PrintVec(); }
+}
+void test_operator_matmul_equal_vec4()
+{
+    // vec4 *= identity should leave the vector unchanged
+    la::vec4 test = la::vec4(1.0f , 2.0f , 3.0f , 4.0f);
+    la::vec4 expected = test;
+    la::mat4 test_mat = la::mat4();
+
+    test *= test_mat;
+
+    if ( vec4_equality_test(test , expected) ) { std::cout << "test_operator_matmul_equal_vec4: true" << std::endl; }
+    else { std::cout << "test_operator_matmul_equal_vec4: false "; test.PrintVec(); }
 }
 void test_operator_cross_vec4()
 {
@@ -557,13 +588,14 @@ void test_operator_matmul()
 }
 void test_multiply_matrices()
 {
+    // I * I = I
     la::mat4 test1 = la::mat4();
     la::mat4 test2 = la::mat4();
 
     if ( mat4_equality_test(test1.MultiplyMatrices(test2) , test1) ) {
-        std::cout << "test_operator_matmul: true" << std::endl;
+        std::cout << "test_multiply_matrices: true" << std::endl;
     } else {
-        std::cout << "test_operator_matmul: false \n";
+        std::cout << "test_multiply_matrices: false \n";
         (test1.MultiplyMatrices(test2)).PrintMat();
     }
 }
@@ -588,47 +620,326 @@ void test_translate_mat()
 }
 void test_rotate_mat()
 {
-    float pitch = la::radians(60.0f);
-    float yaw = la::radians(120.0f);
-    float roll = la::radians(180.0f);
-
     la::mat4 new_mat = la::mat4();
 
-    std::cout << "test_rotate_mat:\n";
-    (new_mat.RotateMat(pitch , yaw , roll)).PrintMat();
+    // rotating by 0 on all axes should return the identity matrix
+    la::mat4 result_zero = new_mat.RotateMat(0.0f , 0.0f , 0.0f);
+    if ( mat4_equality_test(result_zero , la::mat4()) ) {
+        std::cout << "test_rotate_mat (zero rotation = identity): true" << std::endl;
+    } else {
+        std::cout << "test_rotate_mat (zero rotation = identity): false \n";
+        result_zero.PrintMat();
+    }
+
+    // rotating +X by 90 degrees around Z should give +Y
+    la::mat4 rot_z90 = new_mat.RotateMatZ(la::PIBY2);
+    la::vec3 x_axis = la::vec3(1.0f , 0.0f , 0.0f);
+    la::vec3 rotated = x_axis * rot_z90;
+    la::vec3 expected = la::vec3(0.0f , 1.0f , 0.0f);
+    bool x_ne = fabs(rotated.x - expected.x) < 1e-4f;
+    bool y_ne = fabs(rotated.y - expected.y) < 1e-4f;
+    bool z_ne = fabs(rotated.z - expected.z) < 1e-4f;
+    if ( x_ne && y_ne && z_ne ) {
+        std::cout << "test_rotate_mat (rotZ 90: X->Y): true" << std::endl;
+    } else {
+        std::cout << "test_rotate_mat (rotZ 90: X->Y): false ";
+        rotated.PrintVec();
+    }
+
+    // rotating +Y by 90 degrees around X should give +Z
+    la::mat4 rot_x90 = new_mat.RotateMatX(la::PIBY2);
+    la::vec3 y_axis = la::vec3(0.0f , 1.0f , 0.0f);
+    la::vec3 rotated_x = y_axis * rot_x90;
+    la::vec3 expected_x = la::vec3(0.0f , 0.0f , 1.0f);
+    bool x_ne2 = fabs(rotated_x.x - expected_x.x) < 1e-4f;
+    bool y_ne2 = fabs(rotated_x.y - expected_x.y) < 1e-4f;
+    bool z_ne2 = fabs(rotated_x.z - expected_x.z) < 1e-4f;
+    if ( x_ne2 && y_ne2 && z_ne2 ) {
+        std::cout << "test_rotate_mat (rotX 90: Y->Z): true" << std::endl;
+    } else {
+        std::cout << "test_rotate_mat (rotX 90: Y->Z): false ";
+        rotated_x.PrintVec();
+    }
+
+    // rotating +Z by 90 degrees around Y should give +X
+    la::mat4 rot_y90 = new_mat.RotateMatY(la::PIBY2);
+    la::vec3 z_axis = la::vec3(0.0f , 0.0f , 1.0f);
+    la::vec3 rotated_y = z_axis * rot_y90;
+    la::vec3 expected_y = la::vec3(1.0f , 0.0f , 0.0f);
+    bool x_ne3 = fabs(rotated_y.x - expected_y.x) < 1e-4f;
+    bool y_ne3 = fabs(rotated_y.y - expected_y.y) < 1e-4f;
+    bool z_ne3 = fabs(rotated_y.z - expected_y.z) < 1e-4f;
+    if ( x_ne3 && y_ne3 && z_ne3 ) {
+        std::cout << "test_rotate_mat (rotY 90: Z->X): true" << std::endl;
+    } else {
+        std::cout << "test_rotate_mat (rotY 90: Z->X): false ";
+        rotated_y.PrintVec();
+    }
 }
 void test_look_at()
 {
-    la::vec3 cam_pos = la::vec3(0.0f , 0.0f , -4.0f);
-    la::vec3 cam_aim = la::vec3(0.0f , 0.0f , 0.0f);
-    la::vec3 world_up = la::vec3(0.0f , 1.0f , 0.0f);
+    la::vec3 cam_pos  = la::vec3(0.0f , 0.0f , -4.0f);
+    la::vec3 cam_aim  = la::vec3(0.0f , 0.0f ,  0.0f);
+    la::vec3 world_up = la::vec3(0.0f , 1.0f ,  0.0f);
 
-    std::cout << "test_look_at:\n";
     la::mat4 new_mat = la::mat4();
+    la::mat4 view = new_mat.LookAt(cam_pos , cam_aim , world_up);
 
-    (new_mat.LookAt(cam_pos , cam_aim , world_up)).PrintMat();
+    // camera is on the -Z axis looking toward origin, so:
+    // right axis (row 0) should be +X: {1, 0, 0}
+    // up    axis (row 1) should be +Y: {0, 1, 0}
+    // back  axis (row 2) should be -Z: {0, 0,-1}
+    bool right_ok = fabs(view.array[0] - 1.0f) < 1e-4f &&
+                    fabs(view.array[1] - 0.0f) < 1e-4f &&
+                    fabs(view.array[2] - 0.0f) < 1e-4f;
+    bool up_ok    = fabs(view.array[4] - 0.0f) < 1e-4f &&
+                    fabs(view.array[5] - 1.0f) < 1e-4f &&
+                    fabs(view.array[6] - 0.0f) < 1e-4f;
+    bool back_ok  = fabs(view.array[8]  - 0.0f) < 1e-4f &&
+                    fabs(view.array[9]  - 0.0f) < 1e-4f &&
+                    fabs(view.array[10] - (-1.0f)) < 1e-4f;
+
+    if (right_ok) { std::cout << "test_look_at (right axis): true"  << std::endl; }
+    else          { std::cout << "test_look_at (right axis): false\n"; view.PrintMat(); }
+
+    if (up_ok)    { std::cout << "test_look_at (up axis): true"     << std::endl; }
+    else          { std::cout << "test_look_at (up axis): false\n";   view.PrintMat(); }
+
+    if (back_ok)  { std::cout << "test_look_at (back axis): true"   << std::endl; }
+    else          { std::cout << "test_look_at (back axis): false\n"; view.PrintMat(); }
+
+    // a point at the origin should map to (0, 0, -4) in view space
+    la::vec3 origin = la::vec3(0.0f , 0.0f , 0.0f);
+    la::vec3 view_space = origin * view;
+    bool trans_ok = fabs(view_space.x - 0.0f)  < 1e-4f &&
+                    fabs(view_space.y - 0.0f)  < 1e-4f &&
+                    fabs(view_space.z - (-4.0f)) < 1e-4f;
+    if (trans_ok) { std::cout << "test_look_at (origin in view space = {0,0,-4}): true"  << std::endl; }
+    else          { std::cout << "test_look_at (origin in view space = {0,0,-4}): false "; view_space.PrintVec(); }
 }
 void test_perspective_mat()
 {
-    float fov = la::radians(60.0f);
+    float fov    = la::radians(60.0f);
+    float z_near = 0.1f;
+    float z_far  = 10.0f;
 
     la::mat4 new_mat = la::mat4();
+    la::mat4 proj = new_mat.PerspectiveMat(fov , z_near , z_far);
 
-    std::cout << "test_perspective_mat:\n";
-    (new_mat.PerspectiveMat(fov , 0.1f , 10.0f)).PrintMat();
+    // [0][0] and [1][1] should equal 1/tan(fov/2)
+    float expected_scale = 1.0f / tan(fov / 2.0f);
+    if ( fabs(proj.array[0]  - expected_scale) < 1e-4f ) {
+        std::cout << "test_perspective_mat (x scale): true" << std::endl;
+    } else {
+        std::cout << "test_perspective_mat (x scale): false " << proj.array[0] << std::endl;
+    }
+    if ( fabs(proj.array[5]  - expected_scale) < 1e-4f ) {
+        std::cout << "test_perspective_mat (y scale): true" << std::endl;
+    } else {
+        std::cout << "test_perspective_mat (y scale): false " << proj.array[5] << std::endl;
+    }
+
+    // [2][2] should equal -1/(z_far - z_near)
+    float expected_zz = -1.0f / (z_far - z_near);
+    if ( fabs(proj.array[10] - expected_zz) < 1e-4f ) {
+        std::cout << "test_perspective_mat (z depth scale): true" << std::endl;
+    } else {
+        std::cout << "test_perspective_mat (z depth scale): false " << proj.array[10] << std::endl;
+    }
+
+    // [3][2] should equal -z_near/(z_far - z_near)
+    float expected_tz = -z_near / (z_far - z_near);
+    if ( fabs(proj.array[14] - expected_tz) < 1e-4f ) {
+        std::cout << "test_perspective_mat (z translation): true" << std::endl;
+    } else {
+        std::cout << "test_perspective_mat (z translation): false " << proj.array[14] << std::endl;
+    }
+
+    // [2][3] should be -1 (the w divide that enables perspective)
+    if ( fabs(proj.array[11] - (-1.0f)) < 1e-4f ) {
+        std::cout << "test_perspective_mat (w divide): true" << std::endl;
+    } else {
+        std::cout << "test_perspective_mat (w divide): false " << proj.array[11] << std::endl;
+    }
 }
 void test_transpose()
 {
+    // transposing the identity should give back the identity
     la::mat4 test = la::mat4();
-
     if ( mat4_equality_test(test.Transpose() , test) ) {
-        std::cout << "test_transpose: true" << std::endl;
+        std::cout << "test_transpose (identity): true" << std::endl;
     } else {
-        std::cout << "test_transpose: false ";
+        std::cout << "test_transpose (identity): false \n";
         (test.Transpose()).PrintMat();
+    }
+
+    // transposing a known matrix should swap rows and columns
+    float arr[] = {
+        1.0f , 2.0f , 3.0f , 4.0f ,
+        5.0f , 6.0f , 7.0f , 8.0f ,
+        9.0f , 10.0f , 11.0f , 12.0f ,
+        13.0f , 14.0f , 15.0f , 16.0f
+    };
+    float arr_T[] = {
+        1.0f , 5.0f , 9.0f  , 13.0f ,
+        2.0f , 6.0f , 10.0f , 14.0f ,
+        3.0f , 7.0f , 11.0f , 15.0f ,
+        4.0f , 8.0f , 12.0f , 16.0f
+    };
+    la::mat4 m(arr);
+    la::mat4 m_T_expected(arr_T);
+    if ( mat4_equality_test(m.Transpose() , m_T_expected) ) {
+        std::cout << "test_transpose (known matrix): true" << std::endl;
+    } else {
+        std::cout << "test_transpose (known matrix): false \n";
+        m.Transpose().PrintMat();
+    }
+
+    // double transpose should recover the original
+    if ( mat4_equality_test(m.Transpose().Transpose() , m) ) {
+        std::cout << "test_transpose (double transpose = original): true" << std::endl;
+    } else {
+        std::cout << "test_transpose (double transpose = original): false \n";
+        m.Transpose().Transpose().PrintMat();
     }
 }
 
+
+
+// mat4 constructor tests------------------------------------------
+void test_constructor_default_mat4()
+{
+    la::mat4 m;
+    // diagonal must be 1
+    bool diag_ok = m.array[0]==1.0f && m.array[5]==1.0f && m.array[10]==1.0f && m.array[15]==1.0f;
+    // every off-diagonal must be 0
+    bool off_ok = true;
+    for (int i=0 ; i<16 ; i++) {
+        if (i==0 || i==5 || i==10 || i==15) continue;
+        if (m.array[i] != 0.0f) { off_ok = false; break; }
+    }
+    if (diag_ok && off_ok) { std::cout << "test_constructor_default_mat4: true" << std::endl; }
+    else { std::cout << "test_constructor_default_mat4: false\n"; m.PrintMat(); }
+}
+void test_constructor_scalar_mat4()
+{
+    la::mat4 m(3.0f);
+    bool ok = true;
+    for (int i=0 ; i<16 ; i++) { if (m.array[i] != 3.0f) { ok = false; break; } }
+    if (ok) { std::cout << "test_constructor_scalar_mat4: true" << std::endl; }
+    else    { std::cout << "test_constructor_scalar_mat4: false\n"; m.PrintMat(); }
+}
+void test_constructor_array_mat4()
+{
+    float arr[] = {1,2,3,4, 5,6,7,8, 9,10,11,12, 13,14,15,16};
+    la::mat4 m(arr);
+    bool ok = true;
+    for (int i=0 ; i<16 ; i++) { if (m.array[i] != arr[i]) { ok = false; break; } }
+    if (ok) { std::cout << "test_constructor_array_mat4: true" << std::endl; }
+    else    { std::cout << "test_constructor_array_mat4: false\n"; m.PrintMat(); }
+}
+void test_constructor_vec3_mat4()
+{
+    la::vec3 r(1.0f , 2.0f , 3.0f);
+    la::vec3 u(4.0f , 5.0f , 6.0f);
+    la::vec3 b(7.0f , 8.0f , 9.0f);
+    la::mat4 m(r , u , b);
+
+    // rows 0/1/2 should hold the xyz of each vector; row 3 is translation (0,0,0,1)
+    bool row0 = m.array[0]==r.x && m.array[1]==r.y && m.array[2]==r.z && m.array[3]==0.0f;
+    bool row1 = m.array[4]==u.x && m.array[5]==u.y && m.array[6]==u.z && m.array[7]==0.0f;
+    bool row2 = m.array[8]==b.x && m.array[9]==b.y && m.array[10]==b.z && m.array[11]==0.0f;
+    bool row3 = m.array[12]==0.0f && m.array[13]==0.0f && m.array[14]==0.0f && m.array[15]==1.0f;
+    if (row0 && row1 && row2 && row3) { std::cout << "test_constructor_vec3_mat4: true" << std::endl; }
+    else { std::cout << "test_constructor_vec3_mat4: false\n"; m.PrintMat(); }
+}
+void test_constructor_vec4_mat4()
+{
+    la::vec4 r(1.0f , 2.0f , 3.0f , 0.0f);
+    la::vec4 u(4.0f , 5.0f , 6.0f , 0.0f);
+    la::vec4 b(7.0f , 8.0f , 9.0f , 0.0f);
+    la::mat4 m(r , u , b);
+
+    // same layout as vec3 constructor — only xyz is read from each vec4
+    bool row0 = m.array[0]==r.x && m.array[1]==r.y && m.array[2]==r.z && m.array[3]==0.0f;
+    bool row1 = m.array[4]==u.x && m.array[5]==u.y && m.array[6]==u.z && m.array[7]==0.0f;
+    bool row2 = m.array[8]==b.x && m.array[9]==b.y && m.array[10]==b.z && m.array[11]==0.0f;
+    bool row3 = m.array[12]==0.0f && m.array[13]==0.0f && m.array[14]==0.0f && m.array[15]==1.0f;
+    if (row0 && row1 && row2 && row3) { std::cout << "test_constructor_vec4_mat4: true" << std::endl; }
+    else { std::cout << "test_constructor_vec4_mat4: false\n"; m.PrintMat(); }
+}
+
+// mat4 operator *= test------------------------------------------
+void test_operator_matmul_equal_mat4()
+{
+    // M *= I should leave M unchanged
+    float arr[] = {1,2,3,4, 5,6,7,8, 9,10,11,12, 13,14,15,16};
+    la::mat4 m(arr);
+    la::mat4 original(arr);
+    la::mat4 id;
+    m *= id;
+    if ( mat4_equality_test(m , original) ) { std::cout << "test_operator_matmul_equal_mat4 (M*=I=M): true" << std::endl; }
+    else { std::cout << "test_operator_matmul_equal_mat4 (M*=I=M): false\n"; m.PrintMat(); }
+}
+
+// individual axis rotation tests------------------------------------------
+void test_rotate_mat_x()
+{
+    la::mat4 id;
+    la::mat4 r = id.RotateMatX(la::PIBY2);
+
+    // +Y should become +Z after 90-degree rotation around X
+    la::vec3 y_axis(0.0f , 1.0f , 0.0f);
+    la::vec3 result = y_axis * r;
+    bool ok = fabs(result.x - 0.0f) < 1e-4f &&
+              fabs(result.y - 0.0f) < 1e-4f &&
+              fabs(result.z - 1.0f) < 1e-4f;
+    if (ok) { std::cout << "test_rotate_mat_x (Y->Z): true" << std::endl; }
+    else    { std::cout << "test_rotate_mat_x (Y->Z): false "; result.PrintVec(); }
+
+    // zero rotation should be identity
+    la::mat4 r0 = id.RotateMatX(0.0f);
+    if ( mat4_equality_test(r0 , id) ) { std::cout << "test_rotate_mat_x (zero=identity): true" << std::endl; }
+    else { std::cout << "test_rotate_mat_x (zero=identity): false\n"; r0.PrintMat(); }
+}
+void test_rotate_mat_y()
+{
+    la::mat4 id;
+    la::mat4 r = id.RotateMatY(la::PIBY2);
+
+    // +Z should become +X after 90-degree rotation around Y
+    la::vec3 z_axis(0.0f , 0.0f , 1.0f);
+    la::vec3 result = z_axis * r;
+    bool ok = fabs(result.x - 1.0f) < 1e-4f &&
+              fabs(result.y - 0.0f) < 1e-4f &&
+              fabs(result.z - 0.0f) < 1e-4f;
+    if (ok) { std::cout << "test_rotate_mat_y (Z->X): true" << std::endl; }
+    else    { std::cout << "test_rotate_mat_y (Z->X): false "; result.PrintVec(); }
+
+    // zero rotation should be identity
+    la::mat4 r0 = id.RotateMatY(0.0f);
+    if ( mat4_equality_test(r0 , id) ) { std::cout << "test_rotate_mat_y (zero=identity): true" << std::endl; }
+    else { std::cout << "test_rotate_mat_y (zero=identity): false\n"; r0.PrintMat(); }
+}
+void test_rotate_mat_z()
+{
+    la::mat4 id;
+    la::mat4 r = id.RotateMatZ(la::PIBY2);
+
+    // +X should become +Y after 90-degree rotation around Z
+    la::vec3 x_axis(1.0f , 0.0f , 0.0f);
+    la::vec3 result = x_axis * r;
+    bool ok = fabs(result.x - 0.0f) < 1e-4f &&
+              fabs(result.y - 1.0f) < 1e-4f &&
+              fabs(result.z - 0.0f) < 1e-4f;
+    if (ok) { std::cout << "test_rotate_mat_z (X->Y): true" << std::endl; }
+    else    { std::cout << "test_rotate_mat_z (X->Y): false "; result.PrintVec(); }
+
+    // zero rotation should be identity
+    la::mat4 r0 = id.RotateMatZ(0.0f);
+    if ( mat4_equality_test(r0 , id) ) { std::cout << "test_rotate_mat_z (zero=identity): true" << std::endl; }
+    else { std::cout << "test_rotate_mat_z (zero=identity): false\n"; r0.PrintMat(); }
+}
 
 // inline functions, macro tests------------------------------------------
 void test_radians()

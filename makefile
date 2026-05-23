@@ -14,8 +14,13 @@ ${BUILD_DIR}/vec.o: ${INCLUDE_DIR}/vec.h ${SRC_DIR}/vec.cpp
 ${BUILD_DIR}/mat.o: ${INCLUDE_DIR}/mat.h ${SRC_DIR}/mat.cpp
 	${CC} -o ${BUILD_DIR}/mat.o ${SRC_DIR}/mat.cpp -c ${C_FLAGS}
 
-test: ${SRC_DIR}/test.cpp linalg.a
-	${CC} -o test ${SRC_DIR}/test.cpp linalg.a ${C_FLAGS}
+test: ${SRC_DIR}/test.cpp ${SRC_DIR}/vec.cpp ${SRC_DIR}/mat.cpp
+	make ${BUILD_DIR}/vec.o
+	make ${BUILD_DIR}/mat.o
+	${CC} -o test ${SRC_DIR}/test.cpp ${BUILD_DIR}/vec.o ${BUILD_DIR}/mat.o ${C_FLAGS}
 
 example: ${DOCS_DIR}/example.cpp linalg.a
 	${CC} -o example ${DOCS_DIR}/example.cpp linalg.a ${C_FLAGS}
+
+clean:
+	rm build/*

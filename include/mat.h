@@ -7,10 +7,14 @@ class vec3; // just to avoid build errors
 class vec4; // ignore these two forward declarations
 
 class mat4
-{
-public:
+{   
+    friend class vec3;
+    friend class vec4;
+    
+    private:
     float array[16];
-
+    
+    public:
     // constructor functions------------------------
     mat4();
     mat4(float num);
