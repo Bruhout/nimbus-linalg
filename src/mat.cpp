@@ -9,6 +9,10 @@
 using namespace la;
 
 //===============================================================================================
+// getters and setters -------------------------
+float* mat4::get_array() { return array; }
+void mat4::set_array(float* Array) { memcpy(array, Array, 16 * sizeof(float)); }
+
 // constructor functions------------------------
 mat4::mat4()
 {

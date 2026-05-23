@@ -10,11 +10,15 @@ class mat4
 {   
     friend class vec3;
     friend class vec4;
-    
+
     private:
     float array[16];
     
     public:
+    // getters and setters -------------------------
+    float* get_array();
+    void set_array(float* Array);
+
     // constructor functions------------------------
     mat4();
     mat4(float num);

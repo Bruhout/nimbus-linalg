@@ -8,6 +8,16 @@ using namespace la;
 
 // ===========================================================================================
 // VEC3 IMPLEMENTATION
+
+// getters and setters ------------------------
+float vec3::get_x() { return x; }
+float vec3::get_y() { return y; }
+float vec3::get_z() { return z; }
+
+void vec3::set_x(float X) { x = X; }
+void vec3::set_y(float Y) { y = Y; }
+void vec3::set_z(float Z) { z = Z; }
+
 // constructor functions------------------------
 vec3::vec3()
     :x(1.0f), y(1.0f), z(1.0f)
@@ -232,6 +242,18 @@ vec3 vec3::UintToFloat()
 
 // ===========================================================================================
 // VEC4 IMPLEMENTATION
+// getters and setters ------------------------
+float vec4::get_x() { return x; }
+float vec4::get_y() { return y; }
+float vec4::get_z() { return z; }
+float vec4::get_w() { return w; }
+
+void vec4::set_x(float X) { x = X; }
+void vec4::set_y(float Y) { y = Y; }
+void vec4::set_z(float Z) { z = Z; }
+void vec4::set_w(float W) { w = W; }
+
+
 // constructor functions------------------------
 vec4::vec4()
     : x(1.0f) , y(1.0f) , z(1.0f) , w(1.0f)

@@ -23,6 +23,15 @@ class vec3
     float x , y , z;
     
     public:
+    // getters and setters ------------------------
+    float get_x();
+    float get_y();
+    float get_z();
+
+    void set_x(float X);
+    void set_y(float Y);
+    void set_z(float Z);
+
     // constructor functions------------------------
     vec3();
     vec3(float X , float Y , float Z); 
@@ -78,6 +87,17 @@ class vec4
     float x , y , z , w;
     
     public:
+    // getters and setters ------------------------
+    float get_x();
+    float get_y();
+    float get_z();
+    float get_w();
+
+    void set_x(float X);
+    void set_y(float Y);
+    void set_z(float Z);
+    void set_w(float W);
+
     // constuctor functions------------------------
     vec4();
     vec4(float X , float Y , float Z , float W);
