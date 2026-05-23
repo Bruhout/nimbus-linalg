@@ -661,11 +661,11 @@ void test_rotate_mat()
         rotated_x.PrintVec();
     }
 
-    // rotating +Z by 90 degrees around Y should give +X
+    // rotating +Z by 90 degrees around Y should give -X
     la::mat4 rot_y90 = new_mat.RotateMatY(la::PIBY2);
     la::vec3 z_axis = la::vec3(0.0f , 0.0f , 1.0f);
     la::vec3 rotated_y = z_axis * rot_y90;
-    la::vec3 expected_y = la::vec3(1.0f , 0.0f , 0.0f);
+    la::vec3 expected_y = la::vec3(-1.0f , 0.0f , 0.0f);
     bool x_ne3 = fabs(rotated_y.get_x() - expected_y.get_x()) < 1e-4f;
     bool y_ne3 = fabs(rotated_y.get_y() - expected_y.get_y()) < 1e-4f;
     bool z_ne3 = fabs(rotated_y.get_z() - expected_y.get_z()) < 1e-4f;
@@ -907,12 +907,12 @@ void test_rotate_mat_y()
     la::mat4 id;
     la::mat4 r = id.RotateMatY(la::PIBY2);
 
-    // +Z should become +X after 90-degree rotation around Y
+    // +Z should become -X after 90-degree rotation around Y
     la::vec3 z_axis(0.0f , 0.0f , 1.0f);
     la::vec3 result = z_axis * r;
-    bool ok = fabs(result.get_x() - 1.0f) < 1e-4f &&
-              fabs(result.get_y() - 0.0f) < 1e-4f &&
-              fabs(result.get_z() - 0.0f) < 1e-4f;
+    bool ok = fabs(result.get_x() - -1.0f) < 1e-4f &&
+              fabs(result.get_y() -  0.0f) < 1e-4f &&
+              fabs(result.get_z() -  0.0f) < 1e-4f;
     if (ok) { std::cout << "test_rotate_mat_y (Z->X): true" << std::endl; }
     else    { std::cout << "test_rotate_mat_y (Z->X): false "; result.PrintVec(); }
 

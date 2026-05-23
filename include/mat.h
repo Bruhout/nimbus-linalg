@@ -16,7 +16,7 @@ class mat4
     
     public:
     // getters and setters -------------------------
-    float* get_array();
+    const float* get_array() const;
     void set_array(float* Array);
 
     // constructor functions------------------------
