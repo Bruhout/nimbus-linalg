@@ -155,9 +155,9 @@ float vec3::DistanceFrom(vec3 ref_point)
 vec3 vec3::CrossProduct(vec3 vec)
 {
     return vec3(
-        y*vec.z + z*vec.y ,
-        z*vec.x + x*vec.z , 
-        x*vec.y + y*vec.x
+        y*vec.z - z*vec.y ,
+        z*vec.x - x*vec.z , 
+        x*vec.y - y*vec.x
     );
 }
 float vec3::DotProduct(vec3 vec) { return (vec.x*x + vec.y*y + vec.z*z); }
@@ -182,7 +182,7 @@ vec3 vec3::MultiplyVecMat(mat4 mat)
 
 
 // utility functions------------------------
-void vec3::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << '}' << '\n'; }
+void vec3::PrintVec() { std::cout << '(' << x << ',' << y << ',' << z << ')' << '\n'; }
 vec3 vec3::ViewportTransform(int frame_width , int frame_height)
 {
     int frame_height_half = round(frame_height/2.0f);
@@ -406,9 +406,9 @@ float vec4::DistanceFrom(vec4 ref_point)
 vec4 vec4::CrossProduct(vec4 vec)
 {
     return vec4(
-        y*vec.z + z*vec.y ,
-        z*vec.x + x*vec.z ,
-        x*vec.y + y*vec.x ,
+        y*vec.z - z*vec.y ,
+        z*vec.x - x*vec.z ,
+        x*vec.y - y*vec.x ,
         w
     );
 }
@@ -451,7 +451,7 @@ vec4 vec4::PersProjectVec(mat4 proj_mat)
 
 
 // utility functions------------------------
-void vec4::PrintVec() { std::cout << '{' << x << ',' << y << ',' << z << ',' << w << '}' << '\n'; } 
+void vec4::PrintVec() { std::cout << '(' << x << ',' << y << ',' << z << ',' << w << ')' << '\n'; }
 vec4 vec4::ViewportTransform(int frame_width , int frame_height)
 {
     int frame_height_half = round(frame_height/2.0f);
